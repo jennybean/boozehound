@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { Selectors as DrinksSelectors } from "../../data/drinks";
+import { Actions as RecipeActions } from "../../data/recipe";
 import { Selectors as QuerySelectors } from "../../data/query";
+import Modal from "../modal/Modal";
+import Recipe from "../recipe/Recipe";
 
 const mapStateToProps = state => ({
   drinks: DrinksSelectors.getDrinks(state),
   query: QuerySelectors.getQuery(state)
 });
+
+const mapDispatchToProps = {
+  getRecipe: RecipeActions.getRecipe
+};
 
 const DrinksWrapper = styled.div`
   align-content: flex-start;
@@ -47,23 +54,39 @@ const Name = styled.div`
   text-align: center;
 `;
 
-const Menu = ({ drinks, query }) =>
-  !drinks.length ? null : (
+const Drinks = ({ drinks, getRecipe, query }) => {
+  const [showModal, setShowModal] = useState(false);
+  if (!drinks.length) return null;
+
+  const handleClick = id => {
+    setShowModal(true);
+    getRecipe(id);
+  };
+
+  return (
     <div>
       <h1>{query} Drinks</h1>
       <DrinksWrapper>
         {drinks.map(({ name, id, thumbnail }) => (
           <CardWrapper key={id}>
-            <Thumbanil src={thumbnail} />
+            <Thumbanil onClick={() => handleClick(id)} src={thumbnail} />
             <Name>{name}</Name>
           </CardWrapper>
         ))}
       </DrinksWrapper>
+      {showModal && (
+        <Modal closeModal={() => setShowModal(false)}>
+          <Recipe />
+        </Modal>
+      )}
     </div>
   );
-
-Menu.defaultProps = {
-  drinks: []
 };
 
-export default connect(mapStateToProps)(Menu);
+Drinks.defaultProps = {
+  drinks: [],
+  getRecipe: () => undefined,
+  query: ""
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Drinks);

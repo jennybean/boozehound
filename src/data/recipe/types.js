@@ -1,0 +1,2 @@
+export const GET_RECIPE = "GET_RECIPE";
+export const GET_RECIPE_SUCCESS = "GET_RECIPE_SUCCESS";
