@@ -1,16 +1,21 @@
 import React, { Fragment, useEffect } from "react";
 import { connect } from "react-redux";
-import { Actions, Selectors } from "../../data/ingredients";
+import { Actions as DrinksActions } from "../../data/drinks";
+import {
+  Actions as IngredientsActions,
+  Selectors as IngredientsSelectors
+} from "../../data/ingredients";
 
 const mapStateToProps = state => ({
-  ingredients: Selectors.getIngredients(state)
+  ingredients: IngredientsSelectors.getIngredients(state)
 });
 
 const mapDispatchToProps = {
-  getIngredients: Actions.getIngredients
+  getDrinks: DrinksActions.getDrinks,
+  getIngredients: IngredientsActions.getIngredients
 };
 
-function Menu({ getIngredients, ingredients }) {
+function Menu({ getDrinks, getIngredients, ingredients }) {
   useEffect(() => {
     getIngredients();
   }, [getIngredients]);
@@ -19,13 +24,19 @@ function Menu({ getIngredients, ingredients }) {
     <Fragment>
       <h1>Filter By</h1>
       {ingredients.map(ingredient => (
-        <button key={`${ingredient}_button`}>{ingredient}</button>
+        <button
+          key={`${ingredient}_button`}
+          onClick={() => getDrinks(ingredient)}
+        >
+          {ingredient}
+        </button>
       ))}
     </Fragment>
   );
 }
 
 Menu.defaultProps = {
+  getDrinks: () => undefined,
   getIngredients: () => undefined,
   ingredients: []
 };

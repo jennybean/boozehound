@@ -1,0 +1,2 @@
+export const GET_DRINKS = "GET_DRINKS";
+export const GET_DRINKS_SUCCESS = "GET_DRINKS_SUCCESS";
