@@ -22,3 +22,5 @@ export const getRecipe = state => ({
   name: state.recipe.data.strDrink,
   thumbnail: state.recipe.data.strDrinkThumb
 });
+
+export const isLoading = state => state.recipe.isLoading;

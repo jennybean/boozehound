@@ -4,3 +4,5 @@ export const getDrinks = state =>
     name: strDrink,
     thumbnail: strDrinkThumb
   }));
+
+export const isLoading = state => state.drinks.isLoading;

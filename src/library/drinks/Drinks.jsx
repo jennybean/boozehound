@@ -4,11 +4,12 @@ import styled from "styled-components";
 import { Selectors as DrinksSelectors } from "../../data/drinks";
 import { Actions as RecipeActions } from "../../data/recipe";
 import { Selectors as QuerySelectors } from "../../data/query";
-import Modal from "../modal/Modal";
-import Recipe from "../recipe/Recipe";
+import LoadingIndicator from "../loading-indicator/LoadingIndicator";
+import RecipeModal from "../recipe/RecipeModal";
 
 const mapStateToProps = state => ({
   drinks: DrinksSelectors.getDrinks(state),
+  isLoading: DrinksSelectors.isLoading(state),
   query: QuerySelectors.getQuery(state)
 });
 
@@ -54,9 +55,10 @@ const Name = styled.div`
   text-align: center;
 `;
 
-const Drinks = ({ drinks, getRecipe, query }) => {
+const Drinks = ({ drinks, getRecipe, isLoading, query }) => {
   const [showModal, setShowModal] = useState(false);
   if (!drinks.length) return null;
+  if (isLoading) return <LoadingIndicator />;
 
   const handleClick = id => {
     setShowModal(true);
@@ -74,17 +76,14 @@ const Drinks = ({ drinks, getRecipe, query }) => {
           </CardWrapper>
         ))}
       </DrinksWrapper>
-      {showModal && (
-        <Modal closeModal={() => setShowModal(false)}>
-          <Recipe />
-        </Modal>
-      )}
+      {showModal && <RecipeModal closeModal={() => setShowModal(false)} />}
     </div>
   );
 };
 
 Drinks.defaultProps = {
   drinks: [],
+  isLoading: true,
   getRecipe: () => undefined,
   query: ""
 };

@@ -19,10 +19,16 @@ const Description = styled(FlexWrapper)`
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  width: 50%;
 `;
 
 const Instructions = styled.div`
   max-width: 50%;
+`;
+
+const ThumbnailWrapper = styled.div`
+  text-align: center;
+  width: 50%;
 `;
 
 const Thumbnail = styled.img`
@@ -41,7 +47,7 @@ const Recipe = ({
       <Instructions>
         <ul>
           {ingredients.map(({ name, measurement }) => (
-            <li>
+            <li key={`${measurement}_${name}`}>
               {measurement} {name}
             </li>
           ))}
@@ -51,7 +57,9 @@ const Recipe = ({
         <div>Serve in a {glass}.</div>
       </Instructions>
     </Description>
-    <Thumbnail src={thumbnail} />
+    <ThumbnailWrapper>
+      <Thumbnail src={thumbnail} />
+    </ThumbnailWrapper>
   </FlexWrapper>
 );
 

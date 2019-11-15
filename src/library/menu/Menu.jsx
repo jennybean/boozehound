@@ -18,7 +18,7 @@ const mapDispatchToProps = {
 
 const Container = styled.div`
   max-width: 20%;
-  min-width: 150px;
+  min-width: 20%;
   width: 20%;
 `;
 
@@ -28,9 +28,11 @@ const IngredientList = styled.div`
 `;
 
 const Ingredient = styled.button`
-  display: block;
   background: transparent;
   border: none;
+  display: block;
+  font-size: 18px;
+  text-align: left;
   :focus {
     outline: none;
     text-decoration: underline;

@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useEventListener } from "../../helpers/hooks/useEventListener";
+import LoadingIndicator from "../loading-indicator/LoadingIndicator";
 
 const Container = styled.div`
   background: white;
@@ -11,18 +12,16 @@ const Container = styled.div`
   left: 0;
 `;
 
-const CloseButton = styled.button`
-  border: none;
-  opacity: 0.3;
+/* Graciously borrowed from https://codepen.io/brissmyr/pen/egidw */
+const CloseButton = styled.a`
   position: absolute;
-  right: 10px;
-  top: 10px;
+  right: 32px;
+  top: 32px;
   width: 32px;
+  height: 32px;
+  opacity: 0.3;
   :hover {
     opacity: 1;
-  }
-  :focus {
-    outline: none;
   }
   :before,
   :after {
@@ -49,7 +48,7 @@ const Children = styled.div`
   width: 100%;
 `;
 
-const Modal = ({ children, closeModal }) => {
+const Modal = ({ children, closeModal, isLoading }) => {
   const handleKeyDown = e => {
     if (e.keyCode === 27) {
       closeModal();
@@ -60,14 +59,15 @@ const Modal = ({ children, closeModal }) => {
   return (
     <Container>
       <CloseButton onClick={closeModal} />
-      <Children>{children}</Children>
+      <Children>{isLoading ? <LoadingIndicator /> : children}</Children>
     </Container>
   );
 };
 
 Modal.defaultProps = {
   children: null,
-  closeModal: () => undefined
+  closeModal: () => undefined,
+  isLoading: true
 };
 
 export default Modal;
