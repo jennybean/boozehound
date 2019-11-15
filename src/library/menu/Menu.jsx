@@ -17,7 +17,9 @@ const mapDispatchToProps = {
 };
 
 const Container = styled.div`
-  width: 25%;
+  max-width: 20%;
+  min-width: 150px;
+  width: 20%;
 `;
 
 const IngredientList = styled.div`

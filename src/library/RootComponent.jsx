@@ -4,6 +4,7 @@ import Menu from "./menu/Menu";
 import Drinks from "./drinks/Drinks";
 
 const Container = styled.div`
+  background-color: #f0f0f0;
   display: flex;
   overflow: hidden;
   height: 100vh;
