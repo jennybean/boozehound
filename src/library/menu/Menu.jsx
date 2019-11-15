@@ -1,6 +1,7 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { Actions as DrinksActions } from "../../data/drinks";
+import styled from "styled-components";
+import { Actions as QueryActions } from "../../data/query";
 import {
   Actions as IngredientsActions,
   Selectors as IngredientsSelectors
@@ -11,34 +12,55 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  getDrinks: DrinksActions.getDrinks,
-  getIngredients: IngredientsActions.getIngredients
+  getIngredients: IngredientsActions.getIngredients,
+  setQuery: QueryActions.setQuery
 };
 
-function Menu({ getDrinks, getIngredients, ingredients }) {
+const Container = styled.div`
+  width: 25%;
+`;
+
+const IngredientList = styled.div`
+  height: 90%;
+  overflow-y: auto;
+`;
+
+const Ingredient = styled.button`
+  display: block;
+  background: transparent;
+  border: none;
+  :focus {
+    outline: none;
+    text-decoration: underline;
+  }
+`;
+
+function Menu({ getIngredients, ingredients, setQuery }) {
   useEffect(() => {
     getIngredients();
   }, [getIngredients]);
 
   return (
-    <Fragment>
-      <h1>Filter By</h1>
-      {ingredients.map(ingredient => (
-        <button
-          key={`${ingredient}_button`}
-          onClick={() => getDrinks(ingredient)}
-        >
-          {ingredient}
-        </button>
-      ))}
-    </Fragment>
+    <Container>
+      <h1>Filter by</h1>
+      <IngredientList>
+        {ingredients.map(ingredient => (
+          <Ingredient
+            key={`${ingredient}_button`}
+            onClick={() => setQuery(ingredient)}
+          >
+            {ingredient}
+          </Ingredient>
+        ))}
+      </IngredientList>
+    </Container>
   );
 }
 
 Menu.defaultProps = {
-  getDrinks: () => undefined,
   getIngredients: () => undefined,
-  ingredients: []
+  ingredients: [],
+  setQuery: () => undefined
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Menu);
