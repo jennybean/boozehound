@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { Selectors as DrinksSelectors } from "../../data/drinks";
-import { Actions as RecipeActions } from "../../data/recipe";
+import {
+  Actions as RecipeActions,
+  Selectors as RecipeSelectors
+} from "../../data/recipe";
 import { Selectors as QuerySelectors } from "../../data/query";
 import LoadingIndicator from "../loading-indicator/LoadingIndicator";
-import RecipeModal from "../recipe/RecipeModal";
 
 const mapStateToProps = state => ({
   drinks: DrinksSelectors.getDrinks(state),
   isLoading: DrinksSelectors.isLoading(state),
-  query: QuerySelectors.getQuery(state)
+  query: QuerySelectors.getQuery(state),
+  recipe: RecipeSelectors.getRecipe(state)
 });
 
 const mapDispatchToProps = {
@@ -18,12 +21,10 @@ const mapDispatchToProps = {
 };
 
 const DrinksWrapper = styled.div`
-  align-content: flex-start;
   display: flex;
-  flex-wrap: wrap;
-  height: 90%;
-  overflow-y: auto;
-  padding-top: 50px;
+  overflow-y: scroll;
+  padding-top: 30px;
+  width: 100%;
 `;
 
 const Card = styled.div`
@@ -32,9 +33,11 @@ const Card = styled.div`
   display: flex;
   height: 150px;
   justify-content: center;
+  max-width: 200px;
+  min-width: 200px;
   padding: 20px;
   position: relative;
-  width: 200px;
+  border: ${props => (props.isSelected ? "1px solid cornflowerblue" : "none")};
 `;
 
 const CardWrapper = styled(Card)`
@@ -55,29 +58,30 @@ const Name = styled.div`
   text-align: center;
 `;
 
-const Drinks = ({ drinks, getRecipe, isLoading, query }) => {
-  const [showModal, setShowModal] = useState(false);
+const Drinks = ({ drinks, getRecipe, isLoading, query, recipe }) => {
   if (!drinks.length) return null;
   if (isLoading) return <LoadingIndicator />;
 
   const handleClick = id => {
-    setShowModal(true);
     getRecipe(id);
   };
 
   return (
-    <div>
+    <Fragment>
       <h1>{query} Drinks</h1>
       <DrinksWrapper>
         {drinks.map(({ name, id, thumbnail }) => (
-          <CardWrapper key={id}>
-            <Thumbanil onClick={() => handleClick(id)} src={thumbnail} />
+          <CardWrapper
+            key={id}
+            isSelected={recipe.id === id}
+            onClick={() => handleClick(id)}
+          >
+            <Thumbanil src={thumbnail} />
             <Name>{name}</Name>
           </CardWrapper>
         ))}
       </DrinksWrapper>
-      {showModal && <RecipeModal closeModal={() => setShowModal(false)} />}
-    </div>
+    </Fragment>
   );
 };
 
@@ -85,7 +89,8 @@ Drinks.defaultProps = {
   drinks: [],
   isLoading: true,
   getRecipe: () => undefined,
-  query: ""
+  query: "",
+  recipe: {}
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Drinks);
