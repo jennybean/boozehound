@@ -1,14 +1,18 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { Actions as QueryActions } from "../../data/query";
+import {
+  Actions as QueryActions,
+  Selectors as QuerySelectors
+} from "../../data/query";
 import {
   Actions as IngredientsActions,
   Selectors as IngredientsSelectors
 } from "../../data/ingredients";
 
 const mapStateToProps = state => ({
-  ingredients: IngredientsSelectors.getIngredients(state)
+  ingredients: IngredientsSelectors.getIngredients(state),
+  query: QuerySelectors.getQuery(state)
 });
 
 const mapDispatchToProps = {
@@ -17,9 +21,11 @@ const mapDispatchToProps = {
 };
 
 const Container = styled.div`
-  max-width: 15%;
-  min-width: 15%;
-  width: 15%;
+  height: 100%;
+`;
+
+const Header = styled.h2`
+  white-space: nowrap;
 `;
 
 const IngredientList = styled.div`
@@ -35,23 +41,23 @@ const Ingredient = styled.button`
   text-align: left;
   :focus {
     outline: none;
-    text-decoration: underline;
   }
 `;
 
-function Menu({ getIngredients, ingredients, setQuery }) {
+function Filter({ getIngredients, ingredients, query, setQuery }) {
   useEffect(() => {
     getIngredients();
   }, [getIngredients]);
 
   return (
     <Container>
-      <h1>Filter by</h1>
+      <Header>Filter by</Header>
       <IngredientList>
         {ingredients.map(ingredient => (
           <Ingredient
             key={`${ingredient}_button`}
             onClick={() => setQuery(ingredient)}
+            style={query === ingredient ? { textDecoration: "underline" } : {}}
           >
             {ingredient}
           </Ingredient>
@@ -61,10 +67,11 @@ function Menu({ getIngredients, ingredients, setQuery }) {
   );
 }
 
-Menu.defaultProps = {
+Filter.defaultProps = {
   getIngredients: () => undefined,
   ingredients: [],
+  query: "",
   setQuery: () => undefined
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Menu);
+export default connect(mapStateToProps, mapDispatchToProps)(Filter);

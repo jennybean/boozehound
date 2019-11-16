@@ -30,6 +30,7 @@ const DrinksWrapper = styled.div`
 const Card = styled.div`
   align-items: flex-end;
   background-color: white;
+  cursor: pointer;
   display: flex;
   height: 150px;
   justify-content: center;
@@ -68,7 +69,7 @@ const Drinks = ({ drinks, getRecipe, isLoading, query, recipe }) => {
 
   return (
     <Fragment>
-      <h1>{query} Drinks</h1>
+      <h2>{query} Drinks</h2>
       <DrinksWrapper>
         {drinks.map(({ name, id, thumbnail }) => (
           <CardWrapper
